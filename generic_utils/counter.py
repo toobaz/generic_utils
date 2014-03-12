@@ -40,6 +40,10 @@ class TimeCounter(object):
         self._times = []
         now = time.time()
         self._times.append(now)
+    
+    def step(self):
+        now = time.time()
+        self._times.append(now)
 
     def time(self):
         now = time.time()
