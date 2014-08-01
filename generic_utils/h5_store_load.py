@@ -3,6 +3,10 @@ from numpy import array
 from scipy import sparse
 
 def store_array(obj, obj_name, store='store.h5'):
+    """
+    Store a scipy array in an HDF5 store, overriding any object with the same
+    name, and inferring the atom from the dtype.
+    """
     with tb.openFile(store, 'a') as f:
         try:
             n = getattr(f.root, obj_name)
