@@ -4,9 +4,14 @@ import sys
 import time
 
 class Counter(object):
-    def __init__(self, every=100, until=None):
+    def __init__(self, every=None, until=None):
         self.c = 0
-        self._every = every
+        if every:
+            self._every = every
+        elif until:
+            self._every = until // 250
+        else:
+            self._every = 100
         self._dots_in_line = 0
         self._start = time.time()
         self._until = until
