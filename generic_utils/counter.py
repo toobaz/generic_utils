@@ -41,16 +41,55 @@ class Counter(object):
 
 
 class TimeCounter(object):
+    """In its simplest mode,
+       
+       tc = TimeCounter()
+       [...]
+       tc.step()
+       [...]
+       tc.time()
+       
+       this just reports the elapsed time: the difference between step() and
+       time() is simply that only the latter outputs the time, the former has
+       not output.
+       
+       If instead step() is passed a parameter, this will identify a given
+       step. The TimeCounter will remember how many time each step() is called
+       with each given identifier, and the total time spent in that step (each
+       iteration of the step is considered as done when another call to step()
+       is made). output() can then be used to get a summary of execution times.
+    """
     def __init__(self):
         self._times = []
         now = time.time()
         self._times.append(now)
+        # Values are (# iterations, total time) pairs:
+        self._steps = {}
+        # Just to remember the order:
+        self._steps_list = []
+        self._current = None
     
-    def step(self):
+    def step(self, number=None):
         now = time.time()
         self._times.append(now)
+        if self._current:
+            # Previous step ended, record its time
+            if not self._current in self._steps:
+                self._steps[self._current] = [0,0]
+                self._steps_list.append(self._current)
+            self._steps[self._current][0] += 1
+            self._steps[self._current][1] += now - self._times[-2]
+        
+        self._current = number
 
     def time(self):
         now = time.time()
         print("Seconds taken:", now - self._times[-1], "of", now - self._times[0])
         self._times.append(now)
+    
+    def summary(self):
+        for step in self._steps_list:
+            print("Step %s: executed %d times taking %f seconds."
+                                    % (step,
+                                       self._steps[step][0],
+                                       self._steps[step][1]))
