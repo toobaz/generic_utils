@@ -9,7 +9,7 @@ class Counter(object):
         if every:
             self._every = every
         elif until:
-            self._every = until // 250
+            self._every = (until // 250) or 1
         else:
             self._every = 100
         self._dots_in_line = 0
