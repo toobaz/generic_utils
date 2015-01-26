@@ -19,7 +19,7 @@ class Counter(object):
     def count(self):
         self.c += 1
         
-        if not (self.c % self._every):
+        if self._every != -1 and not (self.c % self._every):
             print(".", end="")
             sys.stdout.flush()
             self._dots_in_line += 1
