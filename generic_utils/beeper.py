@@ -18,7 +18,8 @@ class Beeper(object):
 
         self.src.link(self.sink)
     
-    def beep(self):
+    def beep(self, freq=440):
+        self.src.set_property('freq', freq)
         self.pipe.set_state( Gst.State.PLAYING )
         self.ml = GLib.MainLoop()
         GLib.timeout_add( 500, self.stop )
