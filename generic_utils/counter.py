@@ -15,15 +15,37 @@ class Counter(object):
         self._dots_in_line = 0
         self._start = time.time()
         self._until = until
+        self._done = False
     
-    def count(self):
-        self.c += 1
+    def count(self, howmany=1):
+        to_draw = 0
+        if howmany == 1:
+            if self._every != -1 and not (self.c % self._every):
+                to_draw = 1
+        else:
+            leftovers = self.c % self._every
+            to_draw = (leftovers + howmany) // self._every
+
+        self.c += howmany
+
+        self._draw_dots(to_draw)
+                
+        if self._until <= self.c:
+            self.end()
         
-        if self._every != -1 and not (self.c % self._every):
-            print(".", end="")
-            sys.stdout.flush()
-            self._dots_in_line += 1
-        
+        return self.c
+    
+    def _draw_dots(self, dots=1):
+        # Could be more efficient (in checking newlines):
+        for i in range(dots):
+            self._draw_dot()
+   
+    def _draw_dot(self):
+        print(".", end="")
+        sys.stdout.flush()
+
+        self._dots_in_line += 1
+
         if self._dots_in_line == 50:
             if self._until:
                 print(" %d of %d (%0.2f%%) after %0.2f" % (self.c, self._until, 100 * self.c/self._until, time.time() - self._start))
@@ -31,13 +53,12 @@ class Counter(object):
                 print(" %d after %0.2f" % (self.c, time.time() - self._start))
             sys.stdout.flush()
             self._dots_in_line = 0
-        
-        if self._until == self.c:
-            self.end()
-        return self.c
     
     def end(self):
-        print(" %d after %0.2f" % (self.c, time.time() - self._start))
+        if self._done:
+            return
+        print(" %d done in %0.2f" % (self.c, time.time() - self._start))
+        self._done = True
 
 
 class TimeCounter(object):
