@@ -15,7 +15,7 @@ class Counter(object):
         self._dots_in_line = 0
         self._start = time.time()
         self._until = until
-        self._done = False
+        self.total = None
     
     def count(self, howmany=1):
         to_draw = 0
@@ -55,10 +55,10 @@ class Counter(object):
             self._dots_in_line = 0
     
     def end(self):
-        if self._done:
+        if self.total:
             return
-        print(" %d done in %0.2f" % (self.c, time.time() - self._start))
-        self._done = True
+        self.total = time.time() - self._start
+        print(" %d done in %0.2f" % (self.c, self.total))
 
 
 class TimeCounter(object):
