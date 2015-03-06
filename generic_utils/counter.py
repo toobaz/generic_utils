@@ -105,8 +105,11 @@ class TimeCounter(object):
 
     def time(self):
         now = time.time()
-        print("Seconds taken:", now - self._times[-1], "of", now - self._times[0])
+        taken = now - self._times[-1]
+        total = now - self._times[0]
+        print("Seconds taken:", taken, "of", total)
         self._times.append(now)
+        return taken, total
     
     def summary(self):
         for step in self._steps_list:
