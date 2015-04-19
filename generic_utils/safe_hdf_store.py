@@ -4,6 +4,7 @@ import time
 
 class SafeHDFStore(HDFStore):
     def __init__(self, *args, **kwargs):
+        probe_interval = kwargs.pop("probe_interval", 1)
         self._lock = "%s.lock" % args[0]
         while True:
             try:
@@ -12,7 +13,7 @@ class SafeHDFStore(HDFStore):
                                                   os.O_WRONLY)
                 break
             except FileExistsError:
-                time.sleep(1)
+                time.sleep(probe_interval)
 
         HDFStore.__init__(self, *args, **kwargs)
 
