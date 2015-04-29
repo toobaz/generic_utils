@@ -30,7 +30,7 @@ class Counter(object):
 
         self._draw_dots(to_draw)
                 
-        if self._until <= self.c:
+        if self._until and self._until <= self.c:
             self.end()
         
         return self.c
