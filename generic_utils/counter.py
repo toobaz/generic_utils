@@ -4,7 +4,7 @@ import sys
 import time
 
 class Counter(object):
-    def __init__(self, every=None, until=None):
+    def __init__(self, until=None, every=None):
         self.c = 0
         if every:
             self._every = every
