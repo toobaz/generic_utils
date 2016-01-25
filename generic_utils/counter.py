@@ -33,7 +33,7 @@ class Counter(object):
         if self._until and self._until <= self.c:
             self.end()
         
-        if through:
+        if through is not None:
             return through
         else:
             return self.c
