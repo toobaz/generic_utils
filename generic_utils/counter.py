@@ -111,6 +111,7 @@ class TimeCounter(object):
         taken = now - self._times[-1]
         total = now - self._times[0]
         print("Seconds taken:", taken, "of", total)
+        sys.stdout.flush()
         self._times.append(now)
         return taken, total
     
