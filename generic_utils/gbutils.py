@@ -25,7 +25,7 @@ class GBCommand:
     
     plt.plot(*gbkreg(x, y).transpose())
     """
-    def __init__(self, execname, format_out=None):
+    def __init__(self, execname):
         self.execname = execname
 
     def __call__(self, *args, **kwargs):
