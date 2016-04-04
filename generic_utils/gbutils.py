@@ -39,9 +39,8 @@ class GBCommand:
         np.savetxt(proc.stdin, np.column_stack(args))
 
         proc.stdin.close()
-        res = proc.stdout.read()
         
-        res = np.loadtxt(res.decode('utf-8').split('\n'))
+        res = np.loadtxt(proc.stdout)
 
         return res
 
