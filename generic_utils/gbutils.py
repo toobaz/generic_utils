@@ -17,6 +17,7 @@ class GBCommand:
     
     import numpy as np
     from gbutils import gbglreg, gbkreg
+    from matplotlib import pyplot as plt
     
     x = np.arange(100)
     y = x ** 2 - 10
