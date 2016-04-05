@@ -22,7 +22,7 @@ class GBCommand:
     x = np.arange(100)
     y = x ** 2 - 10
     
-    coeff, stderr = gbglreg(x, y, O=1)
+    coeff, stderr = gbglreg(x, y, 'w', O=1)
     
     plt.plot(*gbkreg(x, y).transpose())
     """
@@ -31,10 +31,14 @@ class GBCommand:
         self._doc = None
 
     def __call__(self, *args, **kwargs):
+        args = list(args)
+        argstr = [('-%s' % args.pop(idx)) for idx, arg in enumerate(args)
+                  if isinstance(arg, str)]
+
         kwargstr = {('-%s' % var) : str(kwargs[var]) for var in kwargs}
         kwargslist = [i for k_v in kwargstr.items() for i in k_v]
-        
-        proc = Popen([self.execname] + kwargslist,
+
+        proc = Popen([self.execname] + argstr + kwargslist,
                      stdin=PIPE, stdout=PIPE, stderr=PIPE,
                      env={'LANG' : 'C'})
 
@@ -42,6 +46,10 @@ class GBCommand:
 
         proc.stdin.close()
         
+        err = proc.stderr.read()
+        if err:
+            print("Error %s" % err)
+
         res = np.loadtxt(proc.stdout)
 
         return res
