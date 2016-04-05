@@ -1,5 +1,5 @@
 import numpy as np
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, check_output
 import sys
 
 TOOLS = ['acorr', 'bin', 'boot', 'convtable', 'dist', 'dummyfy', 'env',
@@ -28,6 +28,7 @@ class GBCommand:
     """
     def __init__(self, execname):
         self.execname = execname
+        self._doc = None
 
     def __call__(self, *args, **kwargs):
         kwargstr = {('-%s' % var) : str(kwargs[var]) for var in kwargs}
@@ -44,6 +45,15 @@ class GBCommand:
         res = np.loadtxt(proc.stdout)
 
         return res
+
+    def doc(self):
+        """
+        Load and print documentation for the tool.
+        """
+        # Setting __doc__ of a single instance is useless (see PEP 257)
+        if self._doc is None:
+            self._doc = check_output([self.execname, '-h']).decode('utf-8')
+        print(self._doc)
 
 for tool in TOOLS:
     gbtool = 'gb%s' % tool
