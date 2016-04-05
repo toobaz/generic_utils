@@ -1,6 +1,7 @@
 import numpy as np
 from subprocess import Popen, PIPE, check_output
 import sys
+import errno
 
 TOOLS = ['acorr', 'bin', 'boot', 'convtable', 'dist', 'dummyfy', 'env',
 'filternear', 'fun', 'gcorr', 'get', 'glreg', 'grid', 'hill', 'histo',
@@ -42,11 +43,15 @@ class GBCommand:
                      stdin=PIPE, stdout=PIPE, stderr=PIPE,
                      env={'LANG' : 'C'})
 
-        np.savetxt(proc.stdin, np.column_stack(args))
-
-        proc.stdin.close()
+        try:
+            np.savetxt(proc.stdin, np.column_stack(args))
+            proc.stdin.close()
+        except IOError as e:
+            if e.errno != errno.EPIPE:
+                raise
+            print("Broken pipe")
         
-        err = proc.stderr.read()
+        err = proc.stderr.read().decode('utf-8')
         if err:
             print("Error %s" % err)
 
