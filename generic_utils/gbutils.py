@@ -3,11 +3,13 @@ from subprocess import Popen, PIPE, check_output
 import sys
 import errno
 
-TOOLS = ['acorr', 'bin', 'boot', 'convtable', 'dist', 'dummyfy', 'env',
+TOOLS = {
+'gb' : ('acorr', 'bin', 'boot', 'convtable', 'dist', 'dummyfy', 'env',
 'filternear', 'fun', 'gcorr', 'get', 'glreg', 'grid', 'hill', 'histo',
 'histo2d', 'interp', 'ker', 'ker2d', 'kreg', 'kreg2d', 'lreg', 'mave', 'modes',
 'mstat', 'near', 'nlmult', 'nlpanel', 'nlpolyit', 'nlprobit', 'nlqreg',
-'nlreg', 'plot', 'quant', 'rand', 'stat', 'test', 'xcorr']
+'nlreg', 'plot', 'quant', 'rand', 'stat', 'test', 'xcorr'),
+'subbo' : ('afish', 'fit', 'agen', 'fish', 'fit', 'gen', 'lafit', 'show')}
 
 
 class GBCommand:
@@ -68,6 +70,7 @@ class GBCommand:
             self._doc = check_output([self.execname, '-h']).decode('utf-8')
         print(self._doc)
 
-for tool in TOOLS:
-    gbtool = 'gb%s' % tool
-    setattr(sys.modules[__name__], gbtool , GBCommand(gbtool))
+for family in TOOLS:
+    for tool in TOOLS[family]:
+        gbtool = '%s%s' % (family, tool)
+        setattr(sys.modules[__name__], gbtool , GBCommand(gbtool))
