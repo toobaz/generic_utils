@@ -17,7 +17,7 @@ class Counter(object):
         self._until = until
         self.total = None
     
-    def count(self, howmany=1, through=None):
+    def count(self, howmany=1, through=None, symbol='.'):
         to_draw = 0
         if howmany == 1:
             if self._every != -1 and not (self.c % self._every):
@@ -28,7 +28,7 @@ class Counter(object):
 
         self.c += howmany
 
-        self._draw_dots(to_draw)
+        self._draw_dots(to_draw, symbol=symbol)
                 
         if self._until and self._until <= self.c:
             self.end()
@@ -38,13 +38,13 @@ class Counter(object):
         else:
             return self.c
     
-    def _draw_dots(self, dots=1):
+    def _draw_dots(self, dots=1, symbol='.'):
         # Could be more efficient (in checking newlines):
         for i in range(dots):
-            self._draw_dot()
+            self._draw_dot(symbol=symbol)
    
-    def _draw_dot(self):
-        print(".", end="")
+    def _draw_dot(self, symbol='.'):
+        print(symbol, end="")
         sys.stdout.flush()
 
         self._dots_in_line += 1
