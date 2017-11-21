@@ -7,7 +7,7 @@ def store_array(obj, obj_name, store='store.h5'):
     Store a scipy array in an HDF5 store, overriding any object with the same
     name, and inferring the atom from the dtype.
     """
-    with tb.openFile(store, 'a') as f:
+    with tb.open_file(store, 'a') as f:
         try:
             n = getattr(f.root, obj_name)
             n._f_remove()
@@ -18,12 +18,12 @@ def store_array(obj, obj_name, store='store.h5'):
         ds[:] = obj
 
 def load_array(obj_name, store='store.h5'):
-    with tb.openFile(store) as f:
+    with tb.open_file(store) as f:
         m = getattr(f.root, obj_name).read()
         return m
 
 def store_sparse_mat(m, name, store='store.h5'):
-    with tb.openFile(store,'a') as f:
+    with tb.open_file(store,'a') as f:
         for par in ('data', 'indices', 'indptr', 'shape'):
             full_name = '%s_%s' % (name, par)
             try:
@@ -38,7 +38,7 @@ def store_sparse_mat(m, name, store='store.h5'):
             ds[:] = arr
 
 def load_sparse_mat(name, store='store.h5'):
-    with tb.openFile(store) as f:
+    with tb.open_file(store) as f:
         pars = []
         for par in ('data', 'indices', 'indptr', 'shape'):
             pars.append(getattr(f.root, '%s_%s' % (name, par)).read())
