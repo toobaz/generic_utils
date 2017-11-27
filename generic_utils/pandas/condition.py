@@ -61,5 +61,7 @@ def _new_getitem_axis(self, key, axis=None):
     if isinstance(key, Condition):
         new_key = key._evaluate(self.obj)
         return _old_getitem_axis(self, new_key, axis=axis)
+    return _old_getitem_axis(self, key, axis=axis)
+
 pd.core.indexing._LocIndexer._getitem_axis = _new_getitem_axis
 
