@@ -14,16 +14,20 @@ class Condition(object):
     from generic_utils.pandas.condition import Condition as C
     df = pd.DataFrame([[1, 2, True],
                        [3, 4, False], 
-                       [5,6, True]],
+                       [5, 7, True]],
                       index=range(3), columns=['a', 'b', 'c'])
+    # On specific column:
     print(df.loc[C('a') > 2])
     print(df.loc[-C('a') == C('b')])
     print(df.loc[~C('c')])
+    # On entire DataFrame:
+    print(df.loc[C().sum(axis=1) > 3])
+    print(df.loc[C(['a', 'b']).diff(axis=1)['b'] > 1])
 
     """
     _method = None
 
-    def __init__(self, key):
+    def __init__(self, key=None):
         self._key = key
         self._operations = []
 
@@ -31,7 +35,10 @@ class Condition(object):
         return MethodType(_operator(attr), self)
 
     def _evaluate(self, obj):
-        res = obj[self._key]
+        if self._key is None:
+            res = obj
+        else:
+            res = obj[self._key]
         for method, args, kwargs in self._operations:
             args = list(args)
             for idx, arg in enumerate(args):
@@ -50,7 +57,8 @@ for op in ('lt', 'le', 'eq', 'ne', 'ge', 'gt',
            'and', 'or', 'xor',
            'add', 'sub', 'mul', 'floordiv', 'truediv', 'pow'
            'mod',
-           'neg', 'pos'):
+           'neg', 'pos',
+           'getitem'):
     op_label = '__{}__'.format(op)
     setattr(Condition, op_label, _operator(op_label))
 
