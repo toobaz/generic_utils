@@ -7,22 +7,22 @@ def _operator(op):
         return self
     return func
 
-class Condition(object):
+class Where(object):
     """
     Usage examples:
 
-    from generic_utils.pandas.condition import Condition as C
+    from generic_utils.pandas.where import Where as W
     df = pd.DataFrame([[1, 2, True],
                        [3, 4, False], 
                        [5, 7, True]],
                       index=range(3), columns=['a', 'b', 'c'])
     # On specific column:
-    print(df.loc[C('a') > 2])
-    print(df.loc[-C('a') == C('b')])
-    print(df.loc[~C('c')])
+    print(df.loc[W('a') > 2])
+    print(df.loc[-W('a') == C('b')])
+    print(df.loc[~W('c')])
     # On entire DataFrame:
-    print(df.loc[C().sum(axis=1) > 3])
-    print(df.loc[C(['a', 'b']).diff(axis=1)['b'] > 1])
+    print(df.loc[W().sum(axis=1) > 3])
+    print(df.loc[W(['a', 'b']).diff(axis=1)['b'] > 1])
 
     """
     _method = None
@@ -42,10 +42,10 @@ class Condition(object):
         for method, args, kwargs in self._operations:
             args = list(args)
             for idx, arg in enumerate(args):
-                if isinstance(arg, Condition):
+                if isinstance(arg, Where):
                     args[idx] = arg._evaluate(obj)
             for key in kwargs:
-                if isinstance(kwargs[key], Condition):
+                if isinstance(kwargs[key], Where):
                     kwargs[key] = kwargs[key]._evaluate(obj)
             res = getattr(res, method)(*args, **kwargs)
         return res
@@ -60,13 +60,13 @@ for op in ('lt', 'le', 'eq', 'ne', 'ge', 'gt',
            'neg', 'pos',
            'getitem'):
     op_label = '__{}__'.format(op)
-    setattr(Condition, op_label, _operator(op_label))
+    setattr(Where, op_label, _operator(op_label))
 
 
 # Monkey patching:
 _old_getitem_axis = pd.core.indexing._LocIndexer._getitem_axis
 def _new_getitem_axis(self, key, axis=None):
-    if isinstance(key, Condition):
+    if isinstance(key, Where):
         new_key = key._evaluate(self.obj)
         return _old_getitem_axis(self, new_key, axis=axis)
     return _old_getitem_axis(self, key, axis=axis)
