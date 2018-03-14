@@ -34,6 +34,8 @@ class RegressorsConcatenator:
         return 1 - ((y - pred_y) ** 2).sum() / ((y - y.mean())**2).sum()
 
 
+from sklearn.tree import DecisionTreeRegressor
+
 class DecisionGraftRegressor(RegressorsConcatenator):
     """
     A concatenation of multiple DecisionTreeRegressor, each receiving as input
