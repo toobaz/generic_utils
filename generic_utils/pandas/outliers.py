@@ -33,3 +33,5 @@ def filter_extreme(data, based_on=None, tails=0.01):
 
     return data.loc[condition]
 
+pd.DataFrame.filter_extreme = filter_extreme
+pd.Series.filter_extreme = filter_extreme
