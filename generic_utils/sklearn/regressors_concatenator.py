@@ -25,10 +25,9 @@ class RegressorsConcatenator:
         predicted = np.zeros(len(X))
 
         for idx, model in enumerate(self._fitted):
-            print(idx)
             predicted += model.predict(X)
         return predicted
 
     def score(self, X, y):
-        pred_y = self.predict(X, y)
+        pred_y = self.predict(X)
         return 1 - ((y - pred_y) ** 2).sum() / ((y - y.mean())**2).sum()
