@@ -2,7 +2,8 @@ import numpy as np
 
 class RegressorsConcatenator:
     """
-    Run a (sklearn) regression model on the residuals from the previous one.
+    Run a sequence of (sklearn) regression models, each on the residuals from
+    the previous one.
     
     Only supports fit, predict, score.
     """
@@ -31,3 +32,13 @@ class RegressorsConcatenator:
     def score(self, X, y):
         pred_y = self.predict(X)
         return 1 - ((y - pred_y) ** 2).sum() / ((y - y.mean())**2).sum()
+
+
+class DecisionGraftRegressor(RegressorsConcatenator):
+    """
+    A concatenation of multiple DecisionTreeRegressor, each receiving as input
+    the residuals of the previous one.
+    """
+    def __init__(self, n, **kwargs):
+        models = [DecisionTreeRegressor(**kwargs) for i in range(n)]
+        RegressorsConcatenator.__init__(self, models)
