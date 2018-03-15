@@ -25,7 +25,6 @@ class Where(object):
     print(df.loc[W(['a', 'b']).diff(axis=1)['b'] > 1])
 
     """
-    _method = None
 
     def __init__(self, key=None):
         self._key = key
