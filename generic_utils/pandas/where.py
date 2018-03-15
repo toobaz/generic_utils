@@ -3,41 +3,38 @@ from types import MethodType
 
 def _operator(op):
     def func(self, *args, **kwargs):
-        self._operations.append((op, args, kwargs))
-        return self
+        operations = self._operations + [(op, args, kwargs)]
+        return Where(operations)
     return func
 
 class Where(object):
     """
     Usage examples:
 
-    from generic_utils.pandas.where import Where as W
+    from generic_utils.pandas.where import where as W
     df = pd.DataFrame([[1, 2, True],
                        [3, 4, False], 
                        [5, 7, True]],
                       index=range(3), columns=['a', 'b', 'c'])
     # On specific column:
-    print(df.loc[W('a') > 2])
-    print(df.loc[-W('a') == C('b')])
-    print(df.loc[~W('c')])
-    # On entire DataFrame:
-    print(df.loc[W().sum(axis=1) > 3])
-    print(df.loc[W(['a', 'b']).diff(axis=1)['b'] > 1])
+    print(df.loc[W['a'] > 2])
+    print(df.loc[-W['a'] == W['b']])
+    print(df.loc[~W['c']])
+
+    # On entire  - or subset of a - DataFrame:
+    print(df.loc[W.sum(axis=1) > 3])
+    print(df.loc[W[['a', 'b']].diff(axis=1)['b'] > 1])
 
     """
 
-    def __init__(self, key=None):
-        self._key = key
-        self._operations = []
+    def __init__(self, operations=[]):
+        self._operations = operations
 
     def __getattr__(self, attr):
         return MethodType(_operator(attr), self)
 
     def _evaluate(self, obj):
-        if self._key is None:
-            res = obj
-        else:
-            res = obj[self._key]
+        res = obj
         for method, args, kwargs in self._operations:
             args = list(args)
             for idx, arg in enumerate(args):
@@ -72,3 +69,4 @@ def _new_getitem_axis(self, key, axis=None):
 
 pd.core.indexing._LocIndexer._getitem_axis = _new_getitem_axis
 
+where = Where()
