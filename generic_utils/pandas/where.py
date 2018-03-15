@@ -33,8 +33,8 @@ class Where(object):
     print("Decreased:\n", (-df).loc[increased])
 
     # Filter based on index:
-    to_keep = ((W.index.__mod__(3)).astype(bool) &
-               (W.index.__mod__(2)).astype(bool))
+    to_keep = ((W.index % 3 == 1) &
+               (W.index % 2 == 1))
     print("Non-multiples:\n", df.loc[to_keep])
     """
 
