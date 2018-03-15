@@ -54,7 +54,7 @@ class Where(object):
 for op in ('lt', 'le', 'eq', 'ne', 'ge', 'gt',
            'invert',
            'and', 'or', 'xor',
-           'add', 'sub', 'mul', 'floordiv', 'truediv', 'pow'
+           'add', 'sub', 'mul', 'floordiv', 'truediv', 'pow',
            'mod',
            'neg', 'pos',
            'getitem'):
