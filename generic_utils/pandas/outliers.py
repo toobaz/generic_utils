@@ -24,11 +24,11 @@ def filter_extreme(data, based_on=None, tails=0.01):
         based_on = [based_on]
 
     condition = pd.Series(True, index=data.index)
-    for sub_cond in based_on:
-        if isinstance(based_on, np.ndarray):
-            based_on_s = pd.Series(based_on, index=data.index)
-        elif not isinstance(based_on, pd.Series):
-            based_on_s = data[sub_cond]
+    for based_on_s in based_on:
+        if isinstance(based_on_s, np.ndarray):
+            based_on_s = pd.Series(based_on_s, index=data.index)
+        elif not isinstance(based_on_s, pd.Series):
+            based_on_s = data[based_on_s]
         condition &= _condition_extreme(based_on_s, tails)
 
     return data.loc[condition]
