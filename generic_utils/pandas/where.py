@@ -1,6 +1,8 @@
 import pandas as pd
 from types import MethodType
 
+ATTRIBUTES = {'loc', 'iloc', 'ix', 'index', 'shape', 'values'}
+
 def _operator(op):
     def func(self, *args, **kwargs):
         operations = self._operations + [(op, args, kwargs)]
@@ -25,12 +27,25 @@ class Where(object):
     print(df.loc[W.sum(axis=1) > 3])
     print(df.loc[W[['a', 'b']].diff(axis=1)['b'] > 1])
 
+    # Reusable conditions:
+    increased = (W['a'] > W.loc[0, 'a']) | (W['b'] > W.loc[0, 'b'])
+    print("Increased:\n", df.loc[increased])
+    print("Decreased:\n", (-df).loc[increased])
+
+    # Filter based on index:
+    to_keep = ((W.index.__mod__(3)).astype(bool) &
+               (W.index.__mod__(2)).astype(bool))
+    print("Non-multiples:\n", df.loc[to_keep])
     """
 
     def __init__(self, operations=[]):
         self._operations = operations
 
     def __getattr__(self, attr):
+        if attr in ATTRIBUTES:
+            # Just transform this into something callable, for uniformity:
+            return Where(self._operations + [('__getattribute__',
+                                             (attr,), {})])
         return MethodType(_operator(attr), self)
 
     def _evaluate(self, obj):
