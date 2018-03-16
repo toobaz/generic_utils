@@ -18,7 +18,7 @@ def filter_extreme(data, based_on=None, tails=0.01):
     column in df, on both sides.
     
     """
-    if based_on == None:
+    if based_on is None:
         based_on = [data]
     elif not isinstance(based_on, list):
         based_on = [based_on]
