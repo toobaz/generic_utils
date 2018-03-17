@@ -6,7 +6,7 @@ def _condition_extreme(based_on, tails):
     quants = based_on.quantile([tails, 1-tails])
     return (based_on >= quants.iloc[0]) & (based_on <= quants.iloc[1])
 
-def filter_extreme(data, based_on=None, tails=0.01):
+def filter_extreme(data, based_on=None, tails=0.01, debug=False):
     """
     Filter away extreme observations.
     "based_on" can be
@@ -31,6 +31,9 @@ def filter_extreme(data, based_on=None, tails=0.01):
             based_on_s = data[based_on_s]
         condition &= _condition_extreme(based_on_s, tails)
 
+    if debug:
+        print("Dropping {} obs. of {}".format(len(data) - condition.sum(),
+                                              len(data)))
     return data.loc[condition]
 
 pd.DataFrame.filter_extreme = filter_extreme
