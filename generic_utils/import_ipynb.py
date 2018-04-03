@@ -5,7 +5,7 @@
 import io, os, sys, types
 
 from IPython import get_ipython
-from IPython.nbformat import current
+import nbformat
 from IPython.core.interactiveshell import InteractiveShell
 
 def find_notebook(fullname, path=None):
@@ -41,7 +41,7 @@ class NotebookLoader(object):
                                        
         # load the notebook object
         with io.open(path, 'r', encoding='utf-8') as f:
-            nb = current.read(f, 'json')
+            nb = nbformat.read(f, nbformat.NO_CONVERT)
         
         
         # create the module and add it to sys.modules
