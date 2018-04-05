@@ -44,3 +44,17 @@ class DecisionGraftRegressor(RegressorsConcatenator):
     def __init__(self, n, **kwargs):
         models = [DecisionTreeRegressor(**kwargs) for i in range(n)]
         RegressorsConcatenator.__init__(self, models)
+
+class SandwichRegressor(RegressorsConcatenator):
+    """
+    Repeat multiple times a given concatenation of models, each receiving as
+    input the residuals of the previous one.
+    Differently from RegressorsConcatenar, it accepts model classes and
+    and initialization args, not instances.
+    "model_ts" is an iterable of (model_klass, model_kwargs) tuples.
+    """
+    def __init__(self, model_ts, n):
+        models = [item(**kwargs) for i in range(n)
+                                 for (item, kwargs)
+                                 in zip(model_ks, model_kwargs)]
+        RegressorsConcatenator.__init__(self, models)
