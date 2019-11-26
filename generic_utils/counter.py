@@ -4,7 +4,7 @@ import sys
 import time
 
 class Counter(object):
-    def __init__(self, until=None, every=None):
+    def __init__(self, until=None, every=None, lines=True):
         self.c = 0
         if every:
             self._every = every
@@ -15,6 +15,7 @@ class Counter(object):
         self._dots_in_line = 0
         self._start = time.time()
         self._until = until
+        self._lines = lines
         self.total = None
     
     def count(self, howmany=1, through=None, symbol='.'):
@@ -49,7 +50,7 @@ class Counter(object):
 
         self._dots_in_line += 1
 
-        if self._dots_in_line == 50:
+        if self._dots_in_line == 50 and self._lines:
             if self._until:
                 print(" %d of %d (%0.2f%%) after %0.2f" % (self.c, self._until, 100 * self.c/self._until, time.time() - self._start))
             else:
