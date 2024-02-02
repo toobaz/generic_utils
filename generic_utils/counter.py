@@ -64,6 +64,26 @@ class Counter(object):
         self.total = time.time() - self._start
         print(" %d done in %0.2f" % (self.c, self.total))
 
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        """
+        In iterator mode, we delay printing dots until the _following_ step is
+        made - and we delay printing the final summary until the first invalid
+        step is attempted.
+        """
+        if self.c:
+            self._draw_dots(1)
+
+        if self._until and self._until <= self.c:
+            self.end()
+            raise StopIteration
+
+        self.c += 1
+
+        return self.c - 1
+
 
 class TimeCounter(object):
     """In its simplest mode,
