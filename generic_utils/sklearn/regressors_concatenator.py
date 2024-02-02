@@ -55,6 +55,5 @@ class SandwichRegressor(RegressorsConcatenator):
     """
     def __init__(self, model_ts, n):
         models = [item(**kwargs) for i in range(n)
-                                 for (item, kwargs)
-                                 in zip(model_ks, model_kwargs)]
+                                 for (item, kwargs) in model_ts]]
         RegressorsConcatenator.__init__(self, models)
