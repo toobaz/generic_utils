@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='pb_generic_utils',
     version='0.0.1',
-    packages='generic_utils',
+    packages=['generic_utils'],
     license='MIT',
     description='A few random convenience functions and classes',
     install_requires=['numpy'],
