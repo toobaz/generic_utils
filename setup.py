@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='pb_generic_utils',
     version='0.0.1',
-    packages=['generic_utils'],
+    packages=find_packages(),
     license='MIT',
     description='A few random convenience functions and classes',
     install_requires=['numpy'],
